@@ -4,6 +4,10 @@ import json
 from datetime import datetime
 from flask import Flask, request, jsonify
 
+
+SAMPLE_POINTS_LAT = 5
+SAMPLE_POINTS_LON = 5
+
 app = Flask(__name__)
 
 # Returns the predicted noise value for a certain location and time.
@@ -18,18 +22,16 @@ def get_noise_prediction(lat, lon, time_obj):
 
 # Generates points within a bounding box.
 # bbox: [min_lon, min_lat, max_lon, max_lat]
-# step_degrees: spacing in degrees
 # Returns a list of (lon, lat) tuples.
-def generate_grid(bbox, step_degrees=0.01):
+def generate_grid(bbox):
     min_lon, min_lat, max_lon, max_lat = bbox
     points = []
     lat = min_lat
-    while lat <= max_lat:
-        lon = min_lon
-        while lon <= max_lon:
+    for lat_part in range(SAMPLE_POINTS_LAT):
+        for lon_part in range(SAMPLE_POINTS_LON):
+            lat = lat_part / (SAMPLE_POINTS_LAT - 1) * (max_lat - min_lat) + min_lat
+            lon = lon_part / (SAMPLE_POINTS_LON - 1) * (max_lon - min_lon) + min_lon
             points.append((lon, lat))
-            lon += step_degrees
-        lat += step_degrees
     return points
 
 
@@ -37,7 +39,6 @@ def generate_grid(bbox, step_degrees=0.01):
 # Expects query parameters:
 #    bbox: min_lon,min_lat,max_lon,max_lat (e.g., "13.0,52.0,13.1,52.1")
 #    time: ISO format datetime string (e.g., "2025-03-29T14:30:00")
-#    step: optional, grid spacing in degrees (default 0.01)
 # Returns GeoJSON FeatureCollection with point features.
 @app.route('/predict', methods=['GET'])
 def predict():
@@ -60,10 +61,8 @@ def predict():
     except ValueError:
         return jsonify({'error': 'Invalid time format. Use ISO format like "2025-03-29T14:30:00"'}), 400
 
-    step = float(request.args.get('step', '0.01'))
-
     # Generate grid points
-    points = generate_grid([min_lon, min_lat, max_lon, max_lat], step)
+    points = generate_grid([min_lon, min_lat, max_lon, max_lat])
 
     # Build GeoJSON FeatureCollection
     features = []

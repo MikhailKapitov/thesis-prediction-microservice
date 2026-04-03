@@ -29,12 +29,12 @@ A part of our thesis project.
 
 ## Current endpoints
 
-- /predict (GET). Takes a location and time, as well as an optional step value. Returns a GeoJSON FeatureCollection with point features.
+- /predict (GET). Takes a location and time. Returns a GeoJSON FeatureCollection with point features.
 
   Example:
 
   ```bash
-  $> curl -X GET "http://localhost:5000/predict?bbox=13.0,52.0,13.1,52.1&time=2025-03-29T14:30:00&step=0.1"
+  $> curl -X GET "http://localhost:5000/predict?bbox=13.0,52.0,13.1,52.1&time=2025-03-29T14:30:00"
    {
    "features": [
       {
@@ -77,6 +77,5 @@ A part of our thesis project.
 - Make it use a proper, production-usable server.
 - Prepare to docker it for deployment.
 - Make actual predictions.
-- Maybe have a better, bbox-derived step value, instead of relying on a request.
 - Add unit testing?
 - Add better error handling, logging.
