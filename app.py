@@ -18,10 +18,10 @@ def get_noise_prediction(lat, lon, time_obj, noise_class):
     # TODO: OBV. REPLACE THIS.
     hour = time_obj.hour
 
-    # Time and space ([0; 50]).
-    geographic = (math.sin(lat * 0.5) + math.cos(lon * 0.5) + 2) / 4  # 0-1 range
-    time_factor = (hour % 24) / 24.0  # 0-1 range
-    base_value = (geographic * 0.7 + time_factor * 0.3) * 50  # 0-50
+    # Time and space components ([0; 1] range each)
+    geographic = (math.sin(lat * 0.5) + math.cos(lon * 0.5) + 2) / 4 # [0; 1]
+    time_factor = (hour % 24) / 24.0 # [0; 1]
+    base_value = geographic * 0.7 + time_factor * 0.3 # [0; 1]
 
     # Class-specific multipliers ([0.5; 1.5]).
     class_multipliers = {
@@ -29,13 +29,13 @@ def get_noise_prediction(lat, lon, time_obj, noise_class):
         "alert": 1.5,
         "building_noise": 1.2,
         "human": 0.9,
-        "others": 0.5,
-        "transport": 1.4
+        "transport": 1.4,
+        "others": 0.5
     }
     multiplier = class_multipliers.get(noise_class, 1.0)
 
-    # 1.33 multiplier and [0; 100] clamp.
-    return min(100, max(0, base_value * multiplier * 1.33))
+    # Calculate final value and clamp to [0; 1].
+    return min(1.0, max(0.0, base_value * multiplier))
 
 
 # Generates points within a bounding box.
