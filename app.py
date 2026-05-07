@@ -10,9 +10,9 @@ SAMPLE_POINTS_LON = 5
 
 app = Flask(__name__)
 
-# Returns the predicted noise value for a certain location and time.
+# Returns the predicted noise value for a certain location, time and noise category.
 # time is a datetime object (or string; here we'll pass the parsed datetime)
-def get_noise_prediction(lat, lon, time_obj):
+def get_noise_prediction(lat, lon, time_obj, noise_class):
     # Dummy formula: just to return something interesting for testing.
     # Uses the hour component of the datetime for the dummy calculation.
     # TODO: OBV. REPLACE THIS.
@@ -61,13 +61,17 @@ def predict():
     except ValueError:
         return jsonify({'error': 'Invalid time format. Use ISO format like "2025-03-29T14:30:00"'}), 400
 
+    noise_class = request.args.get('noise_class', 'all')
+    if noise_class not in ['all', 'alert', 'building_noise', 'human', 'transport', 'others']:
+        return jsonify({'error': f'Invalid noise_class. Use one of: all, alert, building_noise, human, others, transport'}), 400
+
     # Generate grid points
     points = generate_grid([min_lon, min_lat, max_lon, max_lat])
 
     # Build GeoJSON FeatureCollection
     features = []
     for lon, lat in points:
-        pred = get_noise_prediction(lat, lon, time_obj)
+        pred = get_noise_prediction(lat, lon, time_obj, noise_class)
         features.append({
             "type": "Feature",
             "geometry": {
@@ -76,7 +80,8 @@ def predict():
             },
             "properties": {
                 "prediction": pred,
-                "time": time_str
+                "time": time_str,
+                "noise_class": noise_class
             }
         })
 
