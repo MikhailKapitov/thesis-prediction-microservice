@@ -29,12 +29,12 @@ A part of our thesis project.
 
 ## Current endpoints
 
-- /predict (GET). Takes a location and time. Returns a GeoJSON FeatureCollection with point features.
+- /predict (GET). Takes a location, time and a noise class (Noise class is optional and defaults to 'all'. Available classes are: 'all', 'alert', 'building_noise', 'human', 'transport' and 'others'). Returns a GeoJSON FeatureCollection with point features.
 
   Example:
 
   ```bash
-  $> curl -X GET "http://localhost:5000/predict?bbox=13.0,52.0,13.1,52.1&time=2025-03-29T14:30:00"
+  $> curl -X GET "http://localhost:5000/predict?bbox=13.0,52.0,13.1,52.1&time=2025-03-29T14:30:00&noise_class"
    {
    "features": [
       {
@@ -46,8 +46,9 @@ A part of our thesis project.
          "type": "Point"
          },
          "properties": {
-         "prediction": 48.368875311888374,
-         "time": "2025-03-29T14:30:00"
+         "prediction": 0.48368875311888374,
+         "time": "2025-03-29T14:30:00",
+         "noise_class": "all"
          },
          "type": "Feature"
       },
@@ -60,8 +61,9 @@ A part of our thesis project.
          "type": "Point"
          },
          "properties": {
-         "prediction": 47.88643550729249,
-         "time": "2025-03-29T14:30:00"
+         "prediction": 0.4788643550729249,
+         "time": "2025-03-29T14:30:00",
+         "noise_class": "all"
          },
          "type": "Feature"
       },
