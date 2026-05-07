@@ -17,7 +17,25 @@ def get_noise_prediction(lat, lon, time_obj, noise_class):
     # Uses the hour component of the datetime for the dummy calculation.
     # TODO: OBV. REPLACE THIS.
     hour = time_obj.hour
-    return (math.sin(lat * 0.1) + math.cos(lon * 0.1) + (hour % 24) / 24.0) * 50 + 50
+
+    # Time and space ([0; 50]).
+    geographic = (math.sin(lat * 0.5) + math.cos(lon * 0.5) + 2) / 4  # 0-1 range
+    time_factor = (hour % 24) / 24.0  # 0-1 range
+    base_value = (geographic * 0.7 + time_factor * 0.3) * 50  # 0-50
+
+    # Class-specific multipliers ([0.5; 1.5]).
+    class_multipliers = {
+        "all": 1.0,
+        "alert": 1.5,
+        "building_noise": 1.2,
+        "human": 0.9,
+        "others": 0.5,
+        "transport": 1.4
+    }
+    multiplier = class_multipliers.get(noise_class, 1.0)
+
+    # 1.33 multiplier and [0; 100] clamp.
+    return min(100, max(0, base_value * multiplier * 1.33))
 
 
 # Generates points within a bounding box.
