@@ -46,7 +46,7 @@ A part of our thesis project.
          "type": "Point"
          },
          "properties": {
-         "prediction": 48.368875311888374,
+         "prediction": 0.48368875311888374,
          "time": "2025-03-29T14:30:00",
          "noise_class": "all"
          },
@@ -61,7 +61,7 @@ A part of our thesis project.
          "type": "Point"
          },
          "properties": {
-         "prediction": 47.88643550729249,
+         "prediction": 0.4788643550729249,
          "time": "2025-03-29T14:30:00",
          "noise_class": "all"
          },
