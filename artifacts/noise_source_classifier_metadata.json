@@ -1,0 +1,46 @@
+{
+  "created_at": "2026-05-12T09:45:13.952666Z",
+  "dataset_path": "data\\almaty_noise_training.csv",
+  "target": "noise_class",
+  "feature_columns": [
+    "latitude",
+    "longitude",
+    "month",
+    "hour",
+    "day_of_week_num",
+    "is_weekend",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "period"
+  ],
+  "numeric_features": [
+    "latitude",
+    "longitude",
+    "month",
+    "hour",
+    "day_of_week_num",
+    "is_weekend",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos"
+  ],
+  "categorical_features": [
+    "period"
+  ],
+  "classes": [
+    "alert",
+    "animals",
+    "building_noise",
+    "human",
+    "others",
+    "transport"
+  ],
+  "metrics": {
+    "accuracy": 0.862,
+    "f1_macro": 0.8548,
+    "f1_weighted": 0.8607
+  }
+}

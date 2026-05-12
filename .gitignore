@@ -1,2 +1,38 @@
+# Environment
 .env
-venv
+.env.*
+!.env.example
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Heavy ML formats
+*.pkl
+*.keras
+*.h5
+
+# OS files
+.DS_Store
+Thumbs.db
