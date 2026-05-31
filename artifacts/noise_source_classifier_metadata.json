@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-05-12T09:45:13.952666Z",
+  "created_at": "2026-05-31T09:25:45.611991Z",
   "dataset_path": "data\\almaty_noise_training.csv",
   "target": "noise_class",
   "feature_columns": [
@@ -40,7 +40,7 @@
   ],
   "metrics": {
     "accuracy": 0.862,
-    "f1_macro": 0.8548,
-    "f1_weighted": 0.8607
+    "f1_macro": 0.8552,
+    "f1_weighted": 0.8605
   }
 }
