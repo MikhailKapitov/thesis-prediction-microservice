@@ -20,8 +20,8 @@ LEVEL_METADATA_PATH = ARTIFACTS_DIR / "noise_level_regressor_metadata.json"
 SOURCE_METADATA_PATH = ARTIFACTS_DIR / "noise_source_classifier_metadata.json"
 
 ALMATY_TZ = ZoneInfo("Asia/Almaty")
-SAMPLE_POINTS_LAT = int(os.environ.get("SAMPLE_POINTS_LAT", "5"))
-SAMPLE_POINTS_LON = int(os.environ.get("SAMPLE_POINTS_LON", "5"))
+SAMPLE_POINTS_LAT = int(os.environ.get("SAMPLE_POINTS_LAT", "20"))
+SAMPLE_POINTS_LON = int(os.environ.get("SAMPLE_POINTS_LON", "20"))
 
 DAY_NAME_TO_NUM = {
     "monday": 0,
