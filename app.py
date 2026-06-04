@@ -141,6 +141,22 @@ def predict_noise(lat: float, lon: float, dt: datetime, day_override: int | None
     }
 
 
+def predict_noise_batch(points, dt, day_override=None):
+    rows = [build_feature_row(lat, lon, dt, day_override) for (lon, lat) in points]
+    features = pd.DataFrame(rows, columns=FEATURE_COLUMNS)
+
+    levels = noise_level_model.predict(features)
+    classes = noise_source_model.predict(features)
+
+    results = []
+    for level, cls in zip(levels, classes):
+        results.append({
+            "noise_level_dba": round(float(level), 2),
+            "noise_class": str(cls),
+        })
+    return results
+
+
 def generate_grid(bbox: list[float]) -> list[tuple[float, float]]:
     min_lon, min_lat, max_lon, max_lat = bbox
     points = []
@@ -193,9 +209,11 @@ def predict():
         if min_lon > max_lon or min_lat > max_lat:
             return jsonify({"error": "Invalid bbox bounds."}), 400
 
+        grid_points = generate_grid(bbox)
+        predictions = predict_noise_batch(grid_points, dt, day_override)
+
         features = []
-        for lon, lat in generate_grid(bbox):
-            prediction = predict_noise(lat, lon, dt, day_override)
+        for (lon, lat), prediction in zip(grid_points, predictions):
             features.append(
                 {
                     "type": "Feature",
