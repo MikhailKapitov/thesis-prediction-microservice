@@ -11,9 +11,10 @@ jobs:
     permissions:
       contents: read
       packages: write
+
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Lowercase owner
         id: owner
         run: echo "name=${OWNER,,}" >> "$GITHUB_OUTPUT"
@@ -26,7 +27,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+          
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -35,3 +36,12 @@ jobs:
           tags: |
             ghcr.io/${{ steps.owner.outputs.name }}/noise-prediction:latest
             ghcr.io/${{ steps.owner.outputs.name }}/noise-prediction:${{ github.sha }}
+
+      - name: Webhook backend
+        if: success()
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.NOISEMAP_DISPATCH_TOKEN }}" \
+            https://api.github.com/repos/kmsssn/noisemap/dispatches \
+            -d '{"event_type":"ml-image-updated","client_payload":{"service":"prediction"}}'
